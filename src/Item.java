@@ -19,6 +19,10 @@ public class Item implements Comparable<Item> {
         }
     }
 
+    public int getWeight() {
+        return weight;
+    }
+
     @Override
     public String toString() {
         return "" + this.weight;
