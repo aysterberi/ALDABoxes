@@ -26,10 +26,12 @@ public class Box {
 
     @Override
     public String toString() {
-        String result = "";
+        String str = "[";
         for(Item item : items) {
-            result += item.toString();
+            str += item.toString() + ", ";
         }
+        String result = str.substring(0, str.length() - 2);
+        result += "]";
         return result;
     }
 }
