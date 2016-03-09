@@ -10,7 +10,7 @@ public class Program {
     }
 
     private LinkedList<Item> populate() {
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 10; i++) {
             int num = rnd.nextInt(10) + 1;
             Item item = new Item(num);
             list.add(item);
@@ -84,11 +84,6 @@ public class Program {
                     if(bestBox.getCapacity() < b.getCapacity()) {
                         bestBox = b;
                     }
-                }
-                if(item.getWeight() == boxCap) {
-                    result.add(new Box(boxCap));
-                    result.get(result.size() - 1).getItems().add(item);
-                    break;
                 }
                 if(bestBox.getCapacity() == item.getWeight()) {
                     bestBox.getItems().add(item);
