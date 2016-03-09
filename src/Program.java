@@ -63,10 +63,10 @@ public class Program {
                 Item item = list.remove();
                 highestCapacityBox.getItems().add(item);
                 highestCapacityBox.setCapacity(highestCapacityBox.getCapacity() - item.getWeight());
-                break;
+            } else if (highestCapacityBox.getCapacity() < list.peek().getWeight()) {
+                result.add(new Box(boxCap));
             }
         }
-
         return result;
     }
 
@@ -85,10 +85,11 @@ public class Program {
         Collections.sort(max, Collections.reverseOrder());
         rnd = new LinkedList<>(list);
 
-        System.out.println("First fit:");
-        System.out.println("Ascending: " + min);
+        System.out.println("Ascending:  " + min);
         System.out.println("Descending: " + max);
-        System.out.println("Random: " + rnd);
+        System.out.println("Random:     " + rnd);
+        System.out.println();
+        System.out.println("First fit:");
 
         startTime = System.nanoTime();
         minResult = program.doFirstFit(min);
@@ -105,11 +106,41 @@ public class Program {
         endTime = System.nanoTime();
         rndDuration = endTime - startTime;
 
-        System.out.println("Sorted ascending: " + minResult + " Number of boxes: " + minResult.size() + " Time taken: " + minDuration);
-        System.out.println("Sorted descending: " + maxResult + " Number of boxes: " + maxResult.size() + " Time taken: " + maxDuration);
-        System.out.println("Random placement: " + rndResult + " Number of boxes: " + rndResult.size() + " Time taken: " + rndDuration);
+        System.out.println("Ascending:  " + minResult + " Number of boxes: " + minResult.size() + " Time taken: " + minDuration);
+        System.out.println("Descending: " + maxResult + " Number of boxes: " + maxResult.size() + " Time taken: " + maxDuration);
+        System.out.println("Random:     " + rndResult + " Number of boxes: " + rndResult.size() + " Time taken: " + rndDuration);
         System.out.println();
+
+        min = new LinkedList<>(list);
+        Collections.sort(min);
+        max = new LinkedList<>(list);
+        Collections.sort(max, Collections.reverseOrder());
+        rnd = new LinkedList<>(list);
+
         System.out.println("Most room fit:");
+
+        startTime = System.nanoTime();
+        minResult.clear();
+        minResult = program.doMostRoomFit(min);
+        endTime = System.nanoTime();
+        minDuration = endTime - startTime;
+
+        startTime = System.nanoTime();
+        maxResult.clear();
+        maxResult = program.doMostRoomFit(max);
+        endTime = System.nanoTime();
+        maxDuration = endTime - startTime;
+
+        startTime = System.nanoTime();
+        rndResult.clear();
+        rndResult = program.doMostRoomFit(rnd);
+        endTime = System.nanoTime();
+        rndDuration = endTime - startTime;
+
+        System.out.println("Ascending:  " + minResult + " Number of boxes: " + minResult.size() + " Time taken: " + minDuration);
+        System.out.println("Descending: " + maxResult + " Number of boxes: " + maxResult.size() + " Time taken: " + maxDuration);
+        System.out.println("Random:     " + rndResult + " Number of boxes: " + rndResult.size() + " Time taken: " + rndDuration);
+        System.out.println();
 
     }
 }
