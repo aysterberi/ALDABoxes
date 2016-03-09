@@ -27,9 +27,11 @@ public class Box {
     @Override
     public String toString() {
         String str = "[";
-        for(Item item : items) {
-            str += item.toString() + ", ";
-        }
+            for (Item item : items) {
+                if (item != null) {
+                    str += item.toString() + ", ";
+                }
+            }
         String result = str.substring(0, str.length() - 2);
         result += "]";
         return result;

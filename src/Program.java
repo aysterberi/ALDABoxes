@@ -1,12 +1,10 @@
-import java.util.ArrayList;
-import java.util.PriorityQueue;
-import java.util.Random;
-import java.util.Stack;
+import java.util.*;
 
 public class Program {
     private ArrayList<Box> heapBoxes = new ArrayList<>();
     private ArrayList<Box> stackBoxes = new ArrayList<>();
     private PriorityQueue<Item> itemHeap = new PriorityQueue<>();
+    private ArrayList<Item> maxList = new ArrayList<>();
     private Stack<Item> itemStack = new Stack<>();
     private Random rnd = new Random();
     private int boxCap;
@@ -21,7 +19,10 @@ public class Program {
             Item item = new Item(num);
             itemHeap.add(item);
             itemStack.push(item);
+            maxList.add(item);
+            Collections.sort(maxList, Collections.reverseOrder());
         }
+        System.out.println("Max Heap: " + maxList);
         System.out.println("Heap: " + itemHeap);
         System.out.println("Stack: " + itemStack);
     }
@@ -31,22 +32,20 @@ public class Program {
     }
 
     private ArrayList<Box> doStackFirstFit() {
-        while(!itemStack.isEmpty()) {
+        while (!itemStack.isEmpty()) {
             if (stackBoxes.isEmpty()) {
                 stackBoxes.add(new Box(boxCap));
             }
-            for(Box b : stackBoxes) {
-                if(itemStack.peek().getWeight() <= b.getCapacity()) {
+            for (Box b : stackBoxes) {
+                if (itemStack.peek().getWeight() <= b.getCapacity()) {
                     Item item = itemStack.pop();
                     b.getItems().add(item);
                     b.setCapacity(b.getCapacity() - item.getWeight());
                     break;
                 }
                 try {
-                    if (itemStack.peek().getWeight() > b.getCapacity() && stackBoxes.get(stackBoxes.indexOf(b) + 1) == null) {
-                        stackBoxes.add(new Box(boxCap));
-                    }
-                } catch(IndexOutOfBoundsException ioobe) {
+                    if (itemStack.peek().getWeight() > b.getCapacity() && stackBoxes.get(stackBoxes.indexOf(b) + 1) == null);
+                } catch (IndexOutOfBoundsException ioobe) {
                     stackBoxes.add(new Box(boxCap));
                     break;
                 }
@@ -54,23 +53,22 @@ public class Program {
         }
         return stackBoxes;
     }
+
     private ArrayList<Box> doHeapFirstFit() {
-        while(!itemHeap.isEmpty()) {
+        while (!itemHeap.isEmpty()) {
             if (heapBoxes.isEmpty()) {
                 heapBoxes.add(new Box(boxCap));
             }
-            for(Box b : heapBoxes) {
-                if(itemHeap.peek().getWeight() <= b.getCapacity()) {
+            for (Box b : heapBoxes) {
+                if (itemHeap.peek().getWeight() <= b.getCapacity()) {
                     Item item = itemHeap.poll();
                     b.getItems().add(item);
                     b.setCapacity(b.getCapacity() - item.getWeight());
                     break;
                 }
                 try {
-                    if (itemHeap.peek().getWeight() > b.getCapacity() && heapBoxes.get(heapBoxes.indexOf(b) + 1) == null) {
-                        heapBoxes.add(new Box(boxCap));
-                    }
-                } catch(IndexOutOfBoundsException ioobe) {
+                    if (itemHeap.peek().getWeight() > b.getCapacity() && heapBoxes.get(heapBoxes.indexOf(b) + 1) == null);
+                } catch (IndexOutOfBoundsException ioobe) {
                     heapBoxes.add(new Box(boxCap));
                     break;
                 }
@@ -87,6 +85,5 @@ public class Program {
         ArrayList<Box> stackFirstFit = program.doStackFirstFit();
         System.out.println("First fit on heap (sorted): " + heapFirstFit + " Number of boxes: " + heapFirstFit.size());
         System.out.println("First fit on stack (unsorted): " + stackFirstFit + " Number of boxes: " + stackFirstFit.size());
-
     }
 }
