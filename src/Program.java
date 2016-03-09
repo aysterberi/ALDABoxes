@@ -196,10 +196,27 @@ public class Program {
         rnd = new LinkedList<>(list);
 
         startTime = System.nanoTime();
+        minResult.clear();
+        minResult = program.doBestFit(min);
+        endTime = System.nanoTime();
+        minDuration = endTime - startTime;
+
+        startTime = System.nanoTime();
+        maxResult.clear();
+        maxResult = program.doBestFit(max);
+        endTime = System.nanoTime();
+        maxDuration = endTime - startTime;
+
+        startTime = System.nanoTime();
         rndResult.clear();
         rndResult = program.doBestFit(rnd);
         endTime = System.nanoTime();
         rndDuration = endTime - startTime;
+
+        System.out.println("Ascending:  " + minResult + " Number of boxes: " + minResult.size() + " Time taken: " + minDuration);
+        System.out.println("Descending: " + maxResult + " Number of boxes: " + maxResult.size() + " Time taken: " + maxDuration);
+        System.out.println("Random:     " + rndResult + " Number of boxes: " + rndResult.size() + " Time taken: " + rndDuration);
+        System.out.println();
 
     }
 }
