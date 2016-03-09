@@ -10,7 +10,7 @@ public class Program {
     }
 
     private LinkedList<Item> populate() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 30; i++) {
             int num = rnd.nextInt(10) + 1;
             Item item = new Item(num);
             list.add(item);
@@ -65,6 +65,51 @@ public class Program {
                 highestCapacityBox.setCapacity(highestCapacityBox.getCapacity() - item.getWeight());
             } else if (highestCapacityBox.getCapacity() < list.peek().getWeight()) {
                 result.add(new Box(boxCap));
+            }
+        }
+        return result;
+    }
+
+    private ArrayList<Box> doBestFit(LinkedList<Item> list) {
+        ArrayList<Box> result = new ArrayList<>();
+        Box bestBox = null;
+        while (!list.isEmpty()) {
+            if(result.isEmpty()) {
+                result.add(new Box(boxCap));
+                bestBox = result.get(0);
+            }
+            Item item = list.remove();
+            while(true) {
+                for(Box b : result) {
+                    if(bestBox.getCapacity() < b.getCapacity()) {
+                        bestBox = b;
+                    }
+                }
+                if(item.getWeight() == boxCap) {
+                    result.add(new Box(boxCap));
+                    result.get(result.size() - 1).getItems().add(item);
+                    break;
+                }
+                if(bestBox.getCapacity() == item.getWeight()) {
+                    bestBox.getItems().add(item);
+                    bestBox.setCapacity(0);
+                    break;
+                } else if(bestBox.getCapacity() > item.getWeight()) {
+                    for (Box b : result) {
+                        if(b.getCapacity() < bestBox.getCapacity() && b.getCapacity() >= item.getWeight()) {
+                            bestBox = b;
+                        }
+                    }
+                    bestBox.getItems().add(item);
+                    bestBox.setCapacity(bestBox.getCapacity() - item.getWeight());
+                    break;
+                } else {
+                    result.add(new Box(boxCap));
+                    bestBox = result.get(result.size() - 1);
+                    bestBox.getItems().add(item);
+                    bestBox.setCapacity(bestBox.getCapacity() - item.getWeight());
+                    break;
+                }
             }
         }
         return result;
@@ -141,6 +186,20 @@ public class Program {
         System.out.println("Descending: " + maxResult + " Number of boxes: " + maxResult.size() + " Time taken: " + maxDuration);
         System.out.println("Random:     " + rndResult + " Number of boxes: " + rndResult.size() + " Time taken: " + rndDuration);
         System.out.println();
+
+        System.out.println("Best fit:");
+
+        min = new LinkedList<>(list);
+        Collections.sort(min);
+        max = new LinkedList<>(list);
+        Collections.sort(max, Collections.reverseOrder());
+        rnd = new LinkedList<>(list);
+
+        startTime = System.nanoTime();
+        rndResult.clear();
+        rndResult = program.doBestFit(rnd);
+        endTime = System.nanoTime();
+        rndDuration = endTime - startTime;
 
     }
 }
