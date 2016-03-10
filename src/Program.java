@@ -1,5 +1,11 @@
 import java.util.*;
 
+/**
+ * This class packs boxes using three different algorithms
+ * with items, attempting to optimise the amount of items
+ * in a box with respect to their total weight and the
+ * box' maximum weight capacity.
+ */
 public class Program {
     private LinkedList<Item> list = new LinkedList<>();
     private Random rnd = new Random();
@@ -22,23 +28,36 @@ public class Program {
         boxCap = 10;
     }
 
+    /**
+    * Returns a list of packed boxes using the first fit method.
+    * The LinkedList argument must have the type Item
+    * <p>
+    * This method always returns an ArrayList, whether or not any boxes have been packed.
+    * It attempts to fit the item into the first possible extant box. If it does not fit,
+    * it creates another box and puts the item inside.
+    *
+    * @param list   A LinkedList of items to pack into boxes
+    * @return       An ArrayList of the packed boxes
+     */
     private ArrayList<Box> doFirstFit(LinkedList<Item> list) {
         ArrayList<Box> result = new ArrayList<>();
         while (!list.isEmpty()) {
             if (result.isEmpty()) {
-                result.add(new Box(boxCap));
+                //no existing boxes
+                result.add(new Box(boxCap));  //add a new box
             }
             for (Box box : result) {
-                if (list.peek().getWeight() <= box.getCapacity()) {
-                    Item item = list.remove();
-                    box.getItems().add(item);
-                    box.setCapacity(box.getCapacity() - item.getWeight());
+                if (list.peek().getWeight() <= box.getCapacity()) { //does our item fit in the box?
+                    Item item = list.remove(); //fetch the item
+                    box.getItems().add(item); // pack it
+                    box.setCapacity(box.getCapacity() - item.getWeight()); //update our box' remaining capacity
                     break;
                 }
                 try {
                     if (list.peek().getWeight() > box.getCapacity() && result.get(result.indexOf(box) + 1) == null) ;
+                    //if the item is too heavy for our box capacity and we've reached the end of packed boxlist
                 } catch (IndexOutOfBoundsException ioobe) {
-                    result.add(new Box(boxCap));
+                    result.add(new Box(boxCap)); //create a new box!
                     break;
                 }
             }
@@ -46,27 +65,44 @@ public class Program {
         return result;
     }
 
+	/**
+     * Returns a list of packed boxes using the most room algorithm.
+     * The LinkedList argument must have the type Item
+     * <p>
+     * This method always returns an ArrayList, whether or not any boxes have been packed.
+     * It attempts to pack each item into the box with most room for it.
+     * If the box with highest capacity still cannot fit the item, a new box is created.
+     *
+     * @param list  A LinkedList of items to pack into boxes
+     * @return      an ArrayList of the packed boxes
+     */
     private ArrayList<Box> doMostRoomFit(LinkedList<Item> list) {
         ArrayList<Box> result = new ArrayList<>();
         Box highestCapacityBox = null;
         while (!list.isEmpty()) {
             if (result.isEmpty()) {
-                result.add(new Box(boxCap));
-                highestCapacityBox = result.get(0);
+                //no boxes
+                result.add(new Box(boxCap)); //add a new box
+                highestCapacityBox = result.get(0); //set it as current highest capacity box
             }
             for (Box box : result) {
                 if(box.getCapacity() > highestCapacityBox.getCapacity()) {
-                    highestCapacityBox = box;
+                    //if current box has higher capacity than last maxcap box
+                    highestCapacityBox = box; //set our box as current highest cap. box
                 }
             }
             if (highestCapacityBox.getCapacity() >= list.peek().getWeight()) {
-                Item item = list.remove();
-                highestCapacityBox.getItems().add(item);
+                //we have space!
+                Item item = list.remove(); //fetch item
+                highestCapacityBox.getItems().add(item); //box it
+                //update our box' remaining capacity
                 highestCapacityBox.setCapacity(highestCapacityBox.getCapacity() - item.getWeight());
             } else if (highestCapacityBox.getCapacity() < list.peek().getWeight()) {
-                result.add(new Box(boxCap));
+                //item is too heavy for any box
+                result.add(new Box(boxCap));  //add a new box
             }
         }
+        //return our packed boxes
         return result;
     }
 
